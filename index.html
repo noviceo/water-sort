@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- version: 1.0.4 -->
+<!-- version: 1.0.5 -->
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -82,12 +82,12 @@
     --gold: #ffd440;
     --text: #e8ecff;
     --radius: 16px;
-    --bottle-trans: 0.15s;
-    --lift-dur: 0.17s;
-    --seg-dur: 0.24s;
-    --shake-dur: 0.23s;
-    --hint-b-dur: 0.54s;
-    --hint-g-dur: 0.6s;
+    --bottle-trans: 0.20s;
+    --lift-dur: 0.22s;
+    --seg-dur: 0.32s;
+    --shake-dur: 0.30s;
+    --hint-b-dur: 0.72s;
+    --hint-g-dur: 0.80s;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1716,9 +1716,9 @@ function handleClick(idx) {
         document.getElementById('move-count').textContent = moves;
         updateDOM();
         if (checkWin()) {
-          setTimeout(showWin, 210);
+          setTimeout(showWin, 280);
         } else if (checkGameOver()) {
-          setTimeout(showGameOver, 240);
+          setTimeout(showGameOver, 320);
         }
       });
     } else {
@@ -1726,7 +1726,7 @@ function handleClick(idx) {
       updateDOM();
       const el = document.getElementById(`wrap-${idx}`);
       el.classList.add('shake');
-      setTimeout(() => el.classList.remove('shake'), 240);
+      setTimeout(() => el.classList.remove('shake'), 320);
       document.getElementById('hint-text').textContent = '부을 수 없어요! 같은 색이거나 빈 병만 가능해요.';
     }
   }
@@ -1930,7 +1930,7 @@ function animatePour(fromIdx, toIdx, onComplete) {
 
   const pourColor = COLORS[bottles[fromIdx][0]].bg;
 
-  const TOTAL_MS    = 420;
+  const TOTAL_MS    = 560;
   const streamDelay = TOTAL_MS * 0.38;
   const streamDur   = TOTAL_MS * 0.34;
 
