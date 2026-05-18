@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- version: 1.1.0 -->
+<!-- version: 1.1.1 -->
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -194,6 +194,21 @@
 
   .bottle-wrap.shake {
     animation: shake var(--shake-dur) ease;
+  }
+
+  .bottle-wrap.bottle-done {
+    animation: bottleDone 0.65s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+  }
+
+  @keyframes bottleDone {
+    0%   { transform: scale(1)    rotate(0deg); }
+    15%  { transform: scale(1.12) rotate(-6deg); }
+    30%  { transform: scale(1.12) rotate(6deg); }
+    45%  { transform: scale(1.07) rotate(-4deg); }
+    60%  { transform: scale(1.05) rotate(4deg); }
+    75%  { transform: scale(1.02) rotate(-2deg); }
+    90%  { transform: scale(1.01) rotate(1deg); }
+    100% { transform: scale(1)    rotate(0deg); }
   }
 
   @keyframes shake {
@@ -1487,6 +1502,25 @@ function playPourSound(color, duration = 0.45) {
 
 
 
+function playBottleDoneSound() {
+  try {
+    const ctx = getAudioCtx();
+    const t = ctx.currentTime;
+    [880, 1318].forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const g   = ctx.createGain();
+      osc.frequency.value = freq;
+      osc.type = 'sine';
+      const st = t + i * 0.08;
+      g.gain.setValueAtTime(0, st);
+      g.gain.linearRampToValueAtTime(0.18, st + 0.03);
+      g.gain.exponentialRampToValueAtTime(0.001, st + 0.38);
+      osc.connect(g); g.connect(ctx.destination);
+      osc.start(st); osc.stop(st + 0.4);
+    });
+  } catch(e) {}
+}
+
 function playCompleteSound() {
   try {
     const ctx = getAudioCtx();
@@ -1715,7 +1749,14 @@ function handleClick(idx) {
         moves++;
         document.getElementById('move-count').textContent = moves;
         updateDOM();
-        if (checkWin()) {
+        const won = checkWin();
+        if (isBottleComplete(bottles[toIdx]) && !won) {
+          const el = document.getElementById(`wrap-${toIdx}`);
+          el.classList.add('bottle-done');
+          setTimeout(() => el.classList.remove('bottle-done'), 700);
+          playBottleDoneSound();
+        }
+        if (won) {
           setTimeout(showWin, 280);
         } else if (checkGameOver()) {
           setTimeout(showGameOver, 320);
