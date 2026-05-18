@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- version: 1.1.1 -->
+<!-- version: 1.1.2 -->
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -2166,6 +2166,22 @@ function confirmResetProgress() {
 // ── Init ─────────────────────────────────────────────────
 loadLevel(0);
 updateSelectOptions();
+
+// ── Service Worker 등록 ──────────────────────────────────
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').then(reg => {
+    reg.addEventListener('updatefound', () => {
+      const sw = reg.installing;
+      sw.addEventListener('statechange', () => {
+        if (sw.state === 'installed' && navigator.serviceWorker.controller) {
+          // 새 버전 설치 완료 → 즉시 반영
+          navigator.serviceWorker.controller.postMessage('skipWaiting');
+          window.location.reload();
+        }
+      });
+    });
+  });
+}
 </script>
 </body>
 </html>
