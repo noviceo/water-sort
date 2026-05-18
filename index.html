@@ -81,6 +81,12 @@
     --gold: #ffd440;
     --text: #e8ecff;
     --radius: 16px;
+    --bottle-trans: 0.15s;
+    --lift-dur: 0.17s;
+    --seg-dur: 0.24s;
+    --shake-dur: 0.23s;
+    --hint-b-dur: 0.54s;
+    --hint-g-dur: 0.6s;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -144,8 +150,8 @@
     align-items: center;
     cursor: pointer;
     gap: 6px;
-    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
-                filter 0.25s ease;
+    transition: transform var(--bottle-trans) cubic-bezier(0.34, 1.56, 0.64, 1),
+                filter var(--bottle-trans) ease;
     will-change: transform;
   }
 
@@ -153,16 +159,16 @@
 
   .bottle-wrap.selected {
     transform: translateY(-18px);
-    animation: liftUp 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation: liftUp var(--lift-dur) cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   }
 
   .bottle-wrap.hint-from {
     transform: translateY(-14px);
-    animation: hintFromBounce 0.9s cubic-bezier(0.34,1.56,0.64,1) infinite alternate;
+    animation: hintFromBounce var(--hint-b-dur) cubic-bezier(0.34,1.56,0.64,1) infinite alternate;
   }
 
   .bottle-wrap.hint-to .bottle-outer {
-    animation: hintToGlow 1s ease-in-out infinite alternate;
+    animation: hintToGlow var(--hint-g-dur) ease-in-out infinite alternate;
   }
 
   @keyframes hintFromBounce {
@@ -186,7 +192,7 @@
   }
 
   .bottle-wrap.shake {
-    animation: shake 0.38s ease;
+    animation: shake var(--shake-dur) ease;
   }
 
   @keyframes shake {
@@ -236,7 +242,7 @@
 
   .color-segment {
     width: 100%;
-    transition: height 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    transition: height var(--seg-dur) cubic-bezier(0.34,1.56,0.64,1);
   }
 
   .bottle-label {
@@ -631,6 +637,19 @@
   .progress-reset-btn:hover { background: #2a0a0a; }
 
   .select-option-cleared::after { content: ' ✓'; }
+
+  @keyframes streamGrow {
+    0%   { transform: scaleY(0); opacity: 0; }
+    20%  { transform: scaleY(1); opacity: 1; }
+    75%  { transform: scaleY(1); opacity: 1; }
+    100% { transform: scaleY(1); opacity: 0; }
+  }
+
+  @keyframes dropletFall {
+    0%   { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(var(--dy)); opacity: 0; }
+  }
+
 </style>
 </head>
 <body>
@@ -1720,9 +1739,9 @@ function handleClick(idx) {
         document.getElementById('move-count').textContent = moves;
         updateDOM();
         if (checkWin()) {
-          setTimeout(showWin, 350);
+          setTimeout(showWin, 210);
         } else if (checkGameOver()) {
-          setTimeout(showGameOver, 400);
+          setTimeout(showGameOver, 240);
         }
       });
     } else {
@@ -1730,7 +1749,7 @@ function handleClick(idx) {
       updateDOM();
       const el = document.getElementById(`wrap-${idx}`);
       el.classList.add('shake');
-      setTimeout(() => el.classList.remove('shake'), 400);
+      setTimeout(() => el.classList.remove('shake'), 240);
       document.getElementById('hint-text').textContent = '부을 수 없어요! 같은 색이거나 빈 병만 가능해요.';
     }
   }
@@ -1934,8 +1953,7 @@ function animatePour(fromIdx, toIdx, onComplete) {
 
   const pourColor = COLORS[bottles[fromIdx][0]].bg;
 
-  // ── 타이밍: 700ms (빠르고 경쾌하게) ─────────────────────────
-  const TOTAL_MS    = 700;
+  const TOTAL_MS    = 420;
   const streamDelay = TOTAL_MS * 0.38;
   const streamDur   = TOTAL_MS * 0.34;
 
@@ -1984,7 +2002,7 @@ function animatePour(fromIdx, toIdx, onComplete) {
       background:${pourColor};
       opacity:0;
       --dy:${dDy}px;
-      animation:dropletFall ${180 + Math.random()*90}ms ease-in ${dDelay}ms forwards;
+      animation:dropletFall ${Math.round((180 + Math.random()*90) * 0.6)}ms ease-in ${dDelay}ms forwards;
     `;
     overlay.appendChild(drop);
   }
