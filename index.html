@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- version: 1.0.2 -->
+<!-- version: 1.0.3 -->
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -423,26 +423,12 @@
     width: 100%;
   }
 
-  .water-stream {
-    position: fixed;
-    pointer-events: none;
-    z-index: 199;
-    border-radius: 3px;
-  }
-
   @keyframes bottlePour {
     0%   { transform: translate(0px, 0px) rotate(0deg); }
     28%  { transform: translate(var(--tx), var(--ty)) rotate(0deg); }
     48%  { transform: translate(var(--tx), var(--ty)) rotate(var(--rot)); }
     78%  { transform: translate(var(--tx), var(--ty)) rotate(var(--rot)); }
     100% { transform: translate(0px, 0px) rotate(0deg); }
-  }
-
-  @keyframes streamIn {
-    0%   { opacity: 0; height: 0px; }
-    20%  { opacity: 1; height: var(--sh); }
-    75%  { opacity: 1; height: var(--sh); }
-    100% { opacity: 0; height: var(--sh); }
   }
 
   .stars {
@@ -640,13 +626,6 @@
   .progress-reset-btn:hover { background: #2a0a0a; }
 
   .select-option-cleared::after { content: ' ✓'; }
-
-  @keyframes streamGrow {
-    0%   { transform: scaleY(0); opacity: 0; }
-    20%  { transform: scaleY(1); opacity: 1; }
-    75%  { transform: scaleY(1); opacity: 1; }
-    100% { transform: scaleY(1); opacity: 0; }
-  }
 
   @keyframes dropletFall {
     0%   { transform: translateY(0); opacity: 1; }
@@ -1963,31 +1942,10 @@ function animatePour(fromIdx, toIdx, onComplete) {
   clone.style.setProperty('--rot', rot + 'deg');
   clone.style.animation = `bottlePour ${TOTAL_MS}ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards`;
 
-  // ── 물줄기 ────────────────────────────────────────────────
+  // ── 물방울 파티클 ─────────────────────────────────────────
   const neckMidX   = toCx;
   const streamTopY = toRect.top + 8;
   const streamH    = Math.max(toRect.bottom - streamTopY - 20, 16);
-
-  const stream = document.createElement('div');
-  stream.className = 'water-stream';
-  stream.style.cssText = `
-    left: ${neckMidX - 5}px;
-    top: ${streamTopY}px;
-    width: 10px;
-    height: ${streamH}px;
-    background: linear-gradient(to bottom,
-      ${pourColor}ff 0%,
-      ${pourColor}cc 55%,
-      ${pourColor}55 100%);
-    transform: scaleY(0);
-    transform-origin: top center;
-    animation: streamGrow ${streamDur}ms ease ${streamDelay}ms forwards;
-    border-radius: 5px;
-    filter: blur(0.6px);
-  `;
-  overlay.appendChild(stream);
-
-  // ── 물방울 파티클 ─────────────────────────────────────────
   for (let d = 0; d < 5; d++) {
     const drop = document.createElement('div');
     const dDelay = streamDelay + streamDur * 0.15 + d * (streamDur * 0.13);
