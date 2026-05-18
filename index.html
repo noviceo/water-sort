@@ -356,6 +356,8 @@
     flex-wrap: nowrap;
     gap: 8px;
     align-items: center;
+    justify-content: center;
+    width: 100%;
   }
 
   #hint-text {
@@ -661,8 +663,7 @@
 </header>
 
 <div style="width:100%;max-width:480px;padding:12px 16px 0;display:flex;flex-direction:column;gap:8px;align-items:center;">
-  <div style="width:100%;display:flex;gap:8px;align-items:center;justify-content:space-between;">
-    <select id="level-select" onchange="loadLevel(parseInt(this.value))">
+  <select id="level-select" style="width:100%" onchange="loadLevel(parseInt(this.value))">
     <option value="0">⭐ 레벨 1</option>
     <option value="1">⭐ 레벨 2</option>
     <option value="2">⭐ 레벨 3</option>
@@ -718,7 +719,6 @@
     <button class="btn btn-secondary" onclick="undoMove()" title="되돌리기">↩ 되돌리기</button>
     <button class="btn btn-hint" id="hint-btn" onclick="showHint()" title="힌트">💡 힌트 <span id="hint-count">3</span></button>
     <button class="btn btn-secondary" onclick="resetLevel()" title="다시 시작">↺ 초기화</button>
-  </div>
   </div>
   <div id="hint-text">병을 탭해서 선택하고, 다른 병에 부어보세요!</div>
 </div>
