@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- version: 1.0.3 -->
+<!-- version: 1.0.4 -->
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -627,10 +627,7 @@
 
   .select-option-cleared::after { content: ' ✓'; }
 
-  @keyframes dropletFall {
-    0%   { transform: translateY(0); opacity: 1; }
-    100% { transform: translateY(var(--dy)); opacity: 0; }
-  }
+
 
 </style>
 </head>
@@ -1942,29 +1939,7 @@ function animatePour(fromIdx, toIdx, onComplete) {
   clone.style.setProperty('--rot', rot + 'deg');
   clone.style.animation = `bottlePour ${TOTAL_MS}ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards`;
 
-  // ── 물방울 파티클 ─────────────────────────────────────────
-  const neckMidX   = toCx;
-  const streamTopY = toRect.top + 8;
-  const streamH    = Math.max(toRect.bottom - streamTopY - 20, 16);
-  for (let d = 0; d < 5; d++) {
-    const drop = document.createElement('div');
-    const dDelay = streamDelay + streamDur * 0.15 + d * (streamDur * 0.13);
-    const dX    = neckMidX + (Math.random() - 0.5) * 18;
-    const dY    = streamTopY + streamH * 0.88 + Math.random() * 6;
-    const dSize = 3 + Math.random() * 4;
-    const dDy   = 7 + Math.random() * 12;
-    drop.style.cssText = `
-      position:fixed; pointer-events:none; z-index:201;
-      left:${dX - dSize/2}px; top:${dY}px;
-      width:${dSize}px; height:${dSize}px;
-      border-radius:50%;
-      background:${pourColor};
-      opacity:0;
-      --dy:${dDy}px;
-      animation:dropletFall ${Math.round((180 + Math.random()*90) * 0.6)}ms ease-in ${dDelay}ms forwards;
-    `;
-    overlay.appendChild(drop);
-  }
+
 
   // ── 소리 ──────────────────────────────────────────────────
   setTimeout(() => playPourSound(pourColor, streamDur / 1000), streamDelay);

@@ -29,6 +29,7 @@ git push origin main
 | 1.0.1 | `bb386a3` | 애니메이션 속도 1.7배 향상 (700ms → 420ms), streamGrow·dropletFall 키프레임 버그 수정 |
 | 1.0.2 | `0b9fe14` | 모바일 컨트롤 버튼 overflow 버그 수정 |
 | 1.0.3 | — | 물줄기 애니메이션 제거 |
+| 1.0.4 | — | 물방울 파티클 제거 (효과음 유지) |
 
 ### 버전 업 절차
 1. `index.html` 첫 줄 `<!-- version: X.Y.Z -->` 숫자 수정
